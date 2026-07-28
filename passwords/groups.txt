@@ -1,0 +1,3 @@
+blackarch-cracker
+blackarch-crypto
+blackarch-wordlist

@@ -1,0 +1,5 @@
+blackarch-reversing
+blackarch-binary
+blackarch-disassembler
+blackarch-decompiler
+blackarch-debugger

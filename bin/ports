@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+# Quick nmap wrapper: fast full-port scan then service scan on open ports
+# Usage: ports <ip> [interface]
+
+set -euo pipefail
+
+TARGET="${1:?Usage: ports <ip>}"
+IFACE="${2:-}"
+IFACE_FLAG=""
+[[ -n "$IFACE" ]] && IFACE_FLAG="-e $IFACE"
+
+echo "[*] Fast port scan: $TARGET"
+OPEN=$(nmap $IFACE_FLAG -p- --min-rate 5000 -T4 -n "$TARGET" -oG - \
+  | awk '/Ports:/{gsub(/\/[^,]*/,""); gsub(/Ports: /,""); gsub(/ /,""); print}' \
+  | tr ',' '\n' | grep -v "^$" | tr '\n' ',' | sed 's/,$//')
+
+if [[ -z "$OPEN" ]]; then
+  echo "[!] No open ports found."
+  exit 0
+fi
+
+echo "[*] Open ports: $OPEN"
+echo "[*] Service/script scan..."
+nmap $IFACE_FLAG -p "$OPEN" -sV -sC -O --reason "$TARGET"

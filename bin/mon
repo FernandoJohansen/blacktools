@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+# Toggle wireless monitor mode
+# Usage: mon <interface> [start|stop]
+
+set -euo pipefail
+
+IFACE="${1:?Usage: mon <interface> [start|stop]}"
+ACTION="${2:-start}"
+
+case "$ACTION" in
+  start)
+    echo "[*] Enabling monitor mode on $IFACE"
+    airmon-ng check kill 2>/dev/null || true
+    ip link set "$IFACE" down
+    iw dev "$IFACE" set type monitor
+    ip link set "$IFACE" up
+    echo "[+] $IFACE is now in monitor mode"
+    iw dev "$IFACE" info
+    ;;
+  stop)
+    echo "[*] Restoring managed mode on $IFACE"
+    ip link set "$IFACE" down
+    iw dev "$IFACE" set type managed
+    ip link set "$IFACE" up
+    echo "[+] $IFACE restored to managed mode"
+    ;;
+  *)
+    echo "Usage: mon <interface> [start|stop]"
+    exit 1
+    ;;
+esac

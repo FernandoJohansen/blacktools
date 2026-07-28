@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# Identify a hash and print the hashcat -m flag for it
+# Usage: hashid-crack '<hash>'
+
+set -euo pipefail
+
+HASH="${1:?Usage: hashid-crack '<hash>'}"
+
+echo "[*] Hash: $HASH"
+echo ""
+echo "[*] haiti output:"
+haiti "$HASH" 2>/dev/null || name-that-hash "$HASH" 2>/dev/null || hashid "$HASH"

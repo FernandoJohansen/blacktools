@@ -1,0 +1,26 @@
+# captures and dumps
+*.pcap
+*.pcapng
+*.cap
+*.dmp
+*.dump
+
+# wordlists (too big)
+*.txt.gz
+rockyou*
+
+# tool output dirs
+output/
+results/
+loot/
+
+# credentials / keys (never commit)
+*.key
+*.pem
+id_rsa
+*.env
+
+# editor junk
+.vscode/
+*.swp
+*~
