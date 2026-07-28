@@ -80,17 +80,17 @@ contains() { local e; for e in "${@:2}"; do [[ "$e" == "$1" ]] && return 0; done
 interactive_menu() {
   local selected=()
   while true; do
-    clear
-    print_banner
-    print_menu "${selected[@]}"
-    echo -ne "  ${BOLD}Choice:${RESET} "
-    read -r choice
+    clear >&2
+    print_banner >&2
+    print_menu "${selected[@]}" >&2
+    echo -ne "  ${BOLD}Choice:${RESET} " >&2
+    read -r choice < /dev/tty
     case "$choice" in
       a|A) selected=("${CATS[@]}") ;;
       n|N) selected=() ;;
       ""  )
         if [[ ${#selected[@]} -eq 0 ]]; then
-          warn "Nothing selected. Pick at least one category."
+          warn "Nothing selected. Pick at least one category." >&2
           sleep 1
         else
           break

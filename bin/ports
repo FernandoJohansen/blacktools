@@ -11,8 +11,9 @@ IFACE_FLAG=""
 
 echo "[*] Fast port scan: $TARGET"
 OPEN=$(nmap $IFACE_FLAG -p- --min-rate 5000 -T4 -n "$TARGET" -oG - \
-  | awk '/Ports:/{gsub(/\/[^,]*/,""); gsub(/Ports: /,""); gsub(/ /,""); print}' \
-  | tr ',' '\n' | grep -v "^$" | tr '\n' ',' | sed 's/,$//')
+  | grep -oP '\d+(?=/open)' \
+  | tr '\n' ',' \
+  | sed 's/,$//')
 
 if [[ -z "$OPEN" ]]; then
   echo "[!] No open ports found."
